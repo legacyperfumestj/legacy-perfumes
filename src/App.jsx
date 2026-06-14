@@ -305,7 +305,7 @@ export default function App() {
         setEditingPerfume(null); setShowAddForm(false); return;
       }
       if (form.id) { const { id, ...rest } = form; await supabaseReq(`Legacy?id=eq.${id}`, { method:"PATCH", body:JSON.stringify(rest) }); }
-      else await supabaseReq("Legacy", { method:"POST", body:JSON.stringify(form) });
+      else { const { id: _id, ...rest } = form; const clean = Object.fromEntries(Object.entries(rest).filter(([,v]) => v !== "" && v !== null)); await supabaseReq("Legacy", { method:"POST", body:JSON.stringify(clean) }); }("Legacy", { method:"POST", body:JSON.stringify(form) });
       await loadPerfumes(); setEditingPerfume(null); setShowAddForm(false);
     } catch(e) { alert("Error: " + e.message); }
   };
