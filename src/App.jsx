@@ -278,7 +278,7 @@ export default function App() {
     setLoading(true);
     try {
       if (IS_DEMO) { setTimeout(() => { setPerfumes(DEMO_PERFUMES); setLoading(false); }, 500); return; }
-      const data = await supabaseReq("perfumes?order=id.asc");
+      const data = await supabaseReq("Legacy?order=id.asc");
       setPerfumes(data); setLoading(false);
     } catch { setPerfumes(DEMO_PERFUMES); setLoading(false); }
   }, []);
@@ -304,8 +304,8 @@ export default function App() {
                 : setPerfumes(ps => [...ps, { ...form, id: Date.now() }]);
         setEditingPerfume(null); setShowAddForm(false); return;
       }
-      if (form.id) { const { id, ...rest } = form; await supabaseReq(`perfumes?id=eq.${id}`, { method:"PATCH", body:JSON.stringify(rest) }); }
-      else await supabaseReq("perfumes", { method:"POST", body:JSON.stringify(form) });
+      if (form.id) { const { id, ...rest } = form; await supabaseReq(`Legacy?id=eq.${id}`, { method:"PATCH", body:JSON.stringify(rest) }); }
+      else await supabaseReq("Legacy", { method:"POST", body:JSON.stringify(form) });
       await loadPerfumes(); setEditingPerfume(null); setShowAddForm(false);
     } catch(e) { alert("Error: " + e.message); }
   };
@@ -314,7 +314,7 @@ export default function App() {
     if (!window.confirm(t.confirm_delete)) return;
     try {
       if (IS_DEMO) { setPerfumes(ps => ps.filter(p => p.id !== id)); return; }
-      await supabaseReq(`perfumes?id=eq.${id}`, { method:"DELETE" });
+      await supabaseReq(`Legacy?id=eq.${id}`, { method:"DELETE" });
       await loadPerfumes();
     } catch(e) { alert("Error: " + e.message); }
   };
